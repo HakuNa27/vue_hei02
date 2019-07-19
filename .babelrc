@@ -1,0 +1,17 @@
+// {
+//     "presets": ["env", "stage-0"],
+//     "plugins": ["transform-runtime", ["component", [
+//       {
+//         "libraryName": "mint-ui",
+//         "style": true
+//       }
+//     ]], "transform-remove-strict-mode"],
+//     "ignore":["./src/lib/mui-master/dist/js/mui.js"],
+//   }
+
+  {
+    "presets": ['env', 'stage-0'],
+    "plugins": ['transform-runtime'],
+    "ignore":["./dist/js/mui.js"],
+    
+}
