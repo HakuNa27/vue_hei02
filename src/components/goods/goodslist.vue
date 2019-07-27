@@ -1,65 +1,59 @@
 <template>
   <div class="goods-list">
-    <div class="goods-item">
-      <img src="https://farm4.staticflickr.com/3920/15008465772_383e697089_b.jpg" alt>
-      <h1 class="title">小米（Mi）小米Note 16G双网通版</h1>
+    <div class="goods-item" v-for="item in goodsList" :key="item.id" @click="goDetail(item.id)">
+      <img :src="item.img_url">
+      <h1 class="title">{{item.title}}</h1>
       <div class="info">
         <p class="price">
-          <span class="now">￥899</span>
-          <span class="old">￥999</span>
+          <span class="now">￥{{item.sell_price}}</span>
+          <span class="old">￥{{item.market_price}}</span>
         </p>
         <p class="sell">
           <span>热卖中</span>
-          <span>剩60件</span>
+          <span>剩{{item.stock_quantity}}件</span>
         </p>
       </div>
     </div>
-    <div class="goods-item">
-      <img src="https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_m.jpg" alt>
-      <h1 class="title">小米（Mi）小米Note 16G双网通版</h1>
-      <div class="info">
-        <p class="price">
-          <span class="now">￥899</span>
-          <span class="old">￥999</span>
-        </p>
-        <p class="sell">
-          <span>热卖中</span>
-          <span>剩60件</span>
-        </p>
-      </div>
-    </div>
-    <div class="goods-item">
-      <img src="https://farm4.staticflickr.com/3894/15008518202_b016d7d289_m.jpg" alt>
-      <h1 class="title">小米（Mi）小米Note 16G双网通版</h1>
-      <div class="info">
-        <p class="price">
-          <span class="now">￥899</span>
-          <span class="old">￥999</span>
-        </p>
-        <p class="sell">
-          <span>热卖中</span>
-          <span>剩60件</span>
-        </p>
-      </div>
-    </div>
-    <div class="goods-item">
-      <img src="https://farm4.staticflickr.com/3920/15008465772_383e697089_b.jpg" alt>
-      <h1 class="title">小米（Mi）小米Note 16G双网通版</h1>
-      <div class="info">
-        <p class="price">
-          <span class="now">￥899</span>
-          <span class="old">￥999</span>
-        </p>
-        <p class="sell">
-          <span>热卖中</span>
-          <span>剩60件</span>
-        </p>
-      </div>
-    </div>
+    <mt-button type="danger" size="large" @click="getMore" v-if="flag">加载更多</mt-button>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  data() {
+    //data 是往自己组件内部，挂载一些私有数据
+    return {
+      pageIndex: 1,
+      goodsList: [],
+      flag:true 
+    };
+  },
+  created() {
+    this.getGoodsList();
+  },
+  methods: {
+    getGoodsList() {
+      this.$http
+        .get(
+          "http://www.liulongbin.top:3005/api/getgoods?pageindex=" +
+            this.pageIndex
+        )
+        .then(result => {
+          // console.log(result.body);
+          if (result.body.status === 0) {
+            this.goodsList = result.body.message;
+          }
+        });
+    },
+    getMore() {
+      this.pageIndex++;
+      this.getGoodsList();
+    },
+    goDetail(id) {
+      this.$router.push({name:"goodsinfo",params:{id}});
+      // this.$router.push('/home/goodsinfo/'+id);
+    },
+  }
+};
 </script>
 <style>
 .goods-list {
